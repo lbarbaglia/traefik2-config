@@ -1,36 +1,34 @@
-debug = false
+[global]
+  sendAnonymousUsage = false
+  checkNewVersion = true
 
-logLevel = "ERROR"
-defaultEntryPoints = ["https","http"]
+[log]
+  level = "DEBUG"
 
 [entryPoints]
-  [entryPoints.dashboard]
-  address = ":8080"
-  [entryPoints.http]
-  address = ":80"
-    [entryPoints.http.redirect]
-    entryPoint = "https"
-  [entryPoints.https]
-  address = ":443"
-  [entryPoints.https.tls]
+  [entryPoints.web]
+    address = ":80"
+    [entryPoints.web.http.redirections.entryPoint]
+      to = "web-secure"
+      scheme = "https"
 
-[retry]
+  [entryPoints.web-secure]
+    address = ":443"
 
 [api]
-entrypoint = "dashboard"
-dashboard = true
+  dashboard = true
+  insecure = true
+#  debug = true
 
-[docker]
-endpoint = "unix:///var/run/docker.sock"
-domain = "kickchain.eu"
-watch = true
-exposedByDefault = false
+[providers.docker]
+  endpoint = "unix:///var/run/docker.sock"
+  watch = true
+  exposedByDefault = false
+  network = "web"
 
-[acme]
-email = "louis.barbaglia@epitech.eu"
-storage = "acme.json"
-entryPoint = "https"
-onHostRule = true
-[acme.httpChallenge]
-entryPoint = "http"
-
+[certificatesRevolvers.letsencrypt.acme]
+  email = "louis.barbaglia@epitech.eu"
+  storage = "acme.json"
+  caServer = "https://acme-staging-v02.api.letsencrypt.org/directory"
+  [certificatesResolvers.letsencrypt.acme.httpChallenge]
+    entryPoint = "web"

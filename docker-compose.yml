@@ -1,12 +1,8 @@
-version: '3'
+version: '3.3'
 
 services:
   traefik:
-    image: traefik:1.7
-    restart: always
-#    labels:
-#      - "traefik.frontend.rule=Host:api-compte.kickchain.eu"
-#      - "traefik.port=8080"
+    image: traefik:v2.3.2
     ports:
       - 80:80
       - 8080:8080
@@ -22,4 +18,3 @@ services:
 networks:
   web:
     external: true
-
