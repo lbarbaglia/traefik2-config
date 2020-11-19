@@ -1,7 +1,7 @@
 # Traefik v2.3.2 configuration
 This is the docker compose and configuration for an instance of Traefik v2.3.2
 
-> You can find the configuration for v1.7 in [an older commit](https://github.com/lbarbaglia/traefik-config/tree/4f17260d657d069c485c4bffea6b3e23753f0a32)
+> You can find a quick draft for v1.7 configuration in [an older commit](https://github.com/lbarbaglia/traefik-config/tree/4f17260d657d069c485c4bffea6b3e23753f0a32)
 
 ## Features
 - HTTP redirect to HTTPS
