@@ -1,7 +1,7 @@
 # Traefik v2.3.2 configuration
 This is the docker compose and configuration for an instance of Traefik v2.3.2
 
-> You can find a quick draft for v1.7 configuration in [an older commit](https://github.com/lbarbaglia/traefik-config/tree/4f17260d657d069c485c4bffea6b3e23753f0a32)
+> You can find a quick draft for v1.7 configuration on [an older commit](https://github.com/lbarbaglia/traefik-config/tree/4f17260d657d069c485c4bffea6b3e23753f0a32)
 
 ## Features
 - HTTP redirect to HTTPS
@@ -31,27 +31,33 @@ Don't forget to replace:
     - traefik.enable=true
 ...
 ```
-> **Required labels:**  
+> **Required labels:**
 > 
->     traefik.http.routers.<service>.rule=Host("<domain name>")  
-> Redirect incoming requests to *\<domain name\>*. Details on Traefik rules [here](https://doc.traefik.io/traefik/routing/routers/#rule)  
-> 
->     traefik.http.routers.<service>.tls=true  
-> Enable tls on this service
+> Redirect incoming requests to *\<domain name\>*. Details on Traefik rules [here](https://doc.traefik.io/traefik/routing/routers/#rule)
 >
->     traefik.http.routers.<service>.tls.certresolver=letsencrypt  
-> Use certresolver *letsencrypt* configured in traefik.toml
->
->     traefik.http.routers.<service>.entrypoints=web-secure  
-> Accept requests from *web-secure* entrypoint only
->
->     traefik.enable=true  
-> [Here](https://doc.traefik.io/traefik/providers/docker/#exposedbydefault)
+>     traefik.http.routers.<service>.rule=Host("<domain name>")
 > 
-> **Optional labels:**  
+> Enable tls on the service:
+>
+>     traefik.http.routers.<service>.tls=true
+>
+> Use certresolver *letsencrypt* configured in traefik.toml:
+>
+>     traefik.http.routers.<service>.tls.certresolver=letsencrypt
+>
+> Accept requests from *web-secure* entrypoint only:
+>
+>     traefik.http.routers.<service>.entrypoints=web-secure
+>
+> More info [here](https://doc.traefik.io/traefik/providers/docker/#exposedbydefault):
+>
+>     traefik.enable=true
 > 
->     traefik.http.services.<service>.loadbalancer.server.port=<port>  
-> Traefik will redirect incoming traffic to port *\<port\>* of the *\<service\>*
+> **Optional labels:**
+> 
+> Redirect incoming traffic to port *\<port\>* of the service:
+>
+>     traefik.http.services.<service>.loadbalancer.server.port=<port>
 
 4. Create an docker network with this command:  
     `docker network create web`
