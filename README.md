@@ -87,6 +87,6 @@ networks:
 7. Once everything is done, launch the traefik instance from *traefik-config* folder.  
     `docker-compose up`
 
-# Congratulation, you can access the Traefic dashboard on port 8080!
+# Congratulation, you can now access the Traefik dashboard on port 8080 of your server/PC!
 
 ### If you have any questions or suggestions, please open an issue or a pull request.
