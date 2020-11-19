@@ -7,6 +7,8 @@ This is the docker compose and configuration for an instance of Traefik v2.3.2
 - HTTP redirect to HTTPS
 - Let's Encrypt auto-generated certificates via HTTP challenge
 
+## Be careful as the Traefik dashboard is configured as *insecure*. You can comment [line 20](https://github.com/lbarbaglia/traefik-config/blob/5515a58233d8e41b61b1d40c3c800519a2d2c9ca/traefik.toml#L20) of traefic.toml to prevent this behavior
+
 ## Installation
 1. Clone the repository  
 2. You first have to create an empty "acme.json" file at the base of this folder. Then set the correct permissions.  
@@ -84,5 +86,7 @@ networks:
 
 7. Once everything is done, launch the traefik instance from *traefik-config* folder.  
     `docker-compose up`
+
+# Congratulation, you can access the Traefic dashboard on port 8080!
 
 ### If you have any questions or suggestions, please open an issue or a pull request.
