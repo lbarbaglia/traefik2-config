@@ -5,36 +5,58 @@ This is the docker compose and configuration for an instance of Traefik v2.3.2
 
 ## Features
 - HTTP redirect to HTTPS
-- Let's Encrypt auto generated certificates
+- Let's Encrypt auto-generated certificates via HTTP challenge
 
 ## Installation
-You first have to create an empty "acme.json" file at the base of this folder.  
-Then set the correct permissions.  
+1. Clone the repository  
+2. You first have to create an empty "acme.json" file at the base of this folder. Then set the correct permissions.  
 `touch acme.json & chmod 600 acme.json`  
+> Let's Encrypt is requiring an acme.json file to store certificates. [Click here to know more](https://doc.traefik.io/traefik/https/acme/#storage "Let's Encrypt - Traefik")
 
-Add these labels to your docker compose service and Traefik will automatically add them  
-Don't forget to replace:
-- *\<domain name\>* by the domain name of the service
-- *\<port\>* by the service's port you want Traefik to redirect to
-
+3. Add these labels to your docker compose service and Traefik will automatically add them.  
+Don't forget to replace:  
+    - *\<domain name\>* by the domain name of the service
+    - *\<service\>* by your service name
+    - *\<port\>* by the service's port you want Traefik to redirect to (optional)
 ```
 ...
-my-service:
+<service>:
   ...
   labels:
-    - traefik.http.routers.account.rule=Host("<domain name>")
-    - traefik.http.services.account.loadbalancer.server.port=<port>
-    - traefik.http.routers.account.tls=true
-    - traefik.http.routers.account.tls.certresolver=letsencrypt
-    - traefik.http.routers.account.entrypoints=web-secure
+    - traefik.http.routers.<service>.rule=Host("<domain name>")
+    - traefik.http.services.<service>.loadbalancer.server.port=<port>
+    - traefik.http.routers.<service>.tls=true
+    - traefik.http.routers.<service>.tls.certresolver=letsencrypt
+    - traefik.http.routers.<service>.entrypoints=web-secure
     - traefik.enable=true
 ...
 ```
+> **Required labels:**  
+> 
+>     traefik.http.routers.<service>.rule=Host("<domain name>")  
+> Redirect incoming requests to *\<domain name\>*. Details on Traefik rules [here](https://doc.traefik.io/traefik/routing/routers/#rule)  
+> 
+>     traefik.http.routers.<service>.tls=true  
+> Enable tls on this service
+>
+>     traefik.http.routers.<service>.tls.certresolver=letsencrypt  
+> Use certresolver *letsencrypt* configured in traefik.toml
+>
+>     traefik.http.routers.<service>.entrypoints=web-secure  
+> Accept requests from *web-secure* entrypoint only
+>
+>     traefik.enable=true  
+> [Here](https://doc.traefik.io/traefik/providers/docker/#exposedbydefault)
+> 
+> **Optional labels:**  
+> 
+>     traefik.http.services.<service>.loadbalancer.server.port=<port>  
+> Traefik will redirect incoming traffic to port *\<port\>* of the *\<service\>*
 
-Create an docker network with this command:  
-`docker network create web`
+4. Create an docker network with this command:  
+    `docker network create web`
 
-Add this at the end of your docker-compose file (you have to add it for every different docker-compose file)  
+5. Add this at the end of your docker-compose file (you have to add it for every different docker-compose file)  
 ```
 ...
 networks:
@@ -42,14 +64,19 @@ networks:
     external: true
 ```
 
-And add the service to the network:  
+6. And add the service to the network:  
 ```
 ...
-my-service:
+<service>:
   ...
   networks:
     web:
 ...
 ```
+
+> The network *web* enable traefik instance to communicate with other services from different docker-composes
+
+7. Once everything is done, launch the traefik instance from *traefik-config* folder.  
+    `docker-compose up`
 
 ### If you have any questions or suggestions, please open an issue or a pull request.
