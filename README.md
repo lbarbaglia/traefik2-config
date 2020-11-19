@@ -14,8 +14,8 @@ Then set the correct permissions.
 
 Add these labels to your docker compose service and Traefik will automatically add them  
 Don't forget to replace:
-- <domain name> by the domain name of the service
-- <port> by the service's port you want Traefik to redirect to
+- *\<domain name\>* by the domain name of the service
+- *\<port\>* by the service's port you want Traefik to redirect to
 
 ```
 ...
