@@ -11,11 +11,12 @@ This is the docker compose and configuration for an instance of Traefik v2.3.2
 
 ## Installation
 1. Clone the repository  
-2. You first have to create an empty "acme.json" file at the base of this folder. Then set the correct permissions.  
+2. Uncomment and replace *\<mail\>* in traefik.toml by your email for Let's Encrypt  
+3. Create an empty "acme.json" file at the base of this folder. Then set the correct permissions.  
 `touch acme.json & chmod 600 acme.json`  
 > Let's Encrypt is requiring an acme.json file to store certificates. [Click here to know more](https://doc.traefik.io/traefik/https/acme/#storage "Let's Encrypt - Traefik")
 
-3. Add these labels to your docker compose service and Traefik will automatically add them.  
+4. Add these labels to your docker compose service and Traefik will automatically add them.  
 Don't forget to replace:  
     - *\<domain name\>* by the domain name of the service
     - *\<service\>* by your service name
@@ -61,10 +62,10 @@ Don't forget to replace:
 >
 >     traefik.http.services.<service>.loadbalancer.server.port=<port>
 
-4. Create an docker network with this command:  
+5. Create an docker network with this command:  
     `docker network create web`
 
-5. Add this at the end of your docker-compose file (you have to add it for every different docker-compose file)  
+6. Add this at the end of your docker-compose file (you have to add it for every different docker-compose file)  
 ```
 ...
 networks:
@@ -72,7 +73,7 @@ networks:
     external: true
 ```
 
-6. And add the service to the network:  
+7. Add the service to the network:  
 ```
 ...
 <service>:
@@ -84,7 +85,7 @@ networks:
 
 > The network *web* enable traefik instance to communicate with other services from different docker-composes
 
-7. Once everything is done, launch the traefik instance from *traefik-config* folder.  
+8. Once everything is done, launch the traefik instance from *traefik-config* folder.  
     `docker-compose up`
 
 # Congratulation, you can now access the Traefik dashboard on port 8080 of your server/PC!
