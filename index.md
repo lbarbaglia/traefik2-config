@@ -20,7 +20,7 @@ This is the docker compose and configuration for an instance of Traefik v2.3.2
 Don't forget to replace:  
     - *\<domain name\>* by the domain name of the service
     - *\<service\>* by your service name
-    - *\<port\>* by the service's port you want Traefik to redirect to (optional)
+    - *\<port\>* by the service's port you want Traefik to redirect to (optional)  
 ```
 ...
 <service>:
