@@ -21,6 +21,7 @@ Don't forget to replace:
     - *\<domain name\>* by the domain name of the service
     - *\<service\>* by your service name
     - *\<port\>* by the service's port you want Traefik to redirect to (optional)  
+
 ```
 ...
 <service>:
