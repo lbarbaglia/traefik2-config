@@ -67,6 +67,7 @@ Don't forget to replace:
     `docker network create web`
 
 6. Add this at the end of your docker-compose file (you have to add it for every different docker-compose file)  
+
 ```
 ...
 networks:
@@ -75,6 +76,7 @@ networks:
 ```
 
 7. Add the service to the network:  
+
 ```
 ...
 <service>:
