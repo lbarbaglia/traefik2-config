@@ -1,37 +1,93 @@
-## Welcome to GitHub Pages
+# Traefik v2.3.2 configuration
+This is the docker compose and configuration for an instance of Traefik v2.3.2
 
-You can use the [editor on GitHub](https://github.com/lbarbaglia/traefik2-config/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+> You can find a quick draft for v1.7 configuration on [an older commit](https://github.com/lbarbaglia/traefik-config/tree/4f17260d657d069c485c4bffea6b3e23753f0a32)
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+## Features
+- HTTP redirect to HTTPS
+- Let's Encrypt auto-generated certificates via HTTP challenge
 
-### Markdown
+## Be careful as the Traefik dashboard is configured as *insecure*. You can comment [line 20](https://github.com/lbarbaglia/traefik-config/blob/5515a58233d8e41b61b1d40c3c800519a2d2c9ca/traefik.toml#L20) of traefic.toml to prevent this behavior
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+## Installation
+1. Clone the repository  
+2. Uncomment and replace *\<mail\>* in traefik.toml by your email for Let's Encrypt  
+3. Create an empty "acme.json" file at the base of this folder. Then set the correct permissions.  
+`touch acme.json & chmod 600 acme.json`  
+> Let's Encrypt is requiring an acme.json file to store certificates. [Click here to know more](https://doc.traefik.io/traefik/https/acme/#storage "Let's Encrypt - Traefik")
 
-```markdown
-Syntax highlighted code block
+4. Add these labels to your docker compose service and Traefik will automatically add them.  
+Don't forget to replace:  
+    - *\<domain name\>* by the domain name of the service
+    - *\<service\>* by your service name
+    - *\<port\>* by the service's port you want Traefik to redirect to (optional)
+```
+...
+<service>:
+  ...
+  labels:
+    - traefik.http.routers.<service>.rule=Host("<domain name>")
+    - traefik.http.services.<service>.loadbalancer.server.port=<port>
+    - traefik.http.routers.<service>.tls=true
+    - traefik.http.routers.<service>.tls.certresolver=letsencrypt
+    - traefik.http.routers.<service>.entrypoints=web-secure
+    - traefik.enable=true
+...
+```
+> **Required labels:**
+> 
+> Redirect incoming requests to *\<domain name\>*. Details on Traefik rules [here](https://doc.traefik.io/traefik/routing/routers/#rule)
+>
+>     traefik.http.routers.<service>.rule=Host("<domain name>")
+> 
+> Enable tls on the service:
+>
+>     traefik.http.routers.<service>.tls=true
+>
+> Use certresolver *letsencrypt* configured in traefik.toml:
+>
+>     traefik.http.routers.<service>.tls.certresolver=letsencrypt
+>
+> Accept requests from *web-secure* entrypoint only:
+>
+>     traefik.http.routers.<service>.entrypoints=web-secure
+>
+> More info [here](https://doc.traefik.io/traefik/providers/docker/#exposedbydefault):
+>
+>     traefik.enable=true
+> 
+> **Optional labels:**
+> 
+> Redirect incoming traffic to port *\<port\>* of the service:
+>
+>     traefik.http.services.<service>.loadbalancer.server.port=<port>
 
-# Header 1
-## Header 2
-### Header 3
+5. Create an docker network with this command:  
+    `docker network create web`
 
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+6. Add this at the end of your docker-compose file (you have to add it for every different docker-compose file)  
+```
+...
+networks:
+  web:
+    external: true
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+7. Add the service to the network:  
+```
+...
+<service>:
+  ...
+  networks:
+    web:
+...
+```
 
-### Jekyll Themes
+> The network *web* enable traefik instance to communicate with other services from different docker-composes
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/lbarbaglia/traefik2-config/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+8. Once everything is done, launch the traefik instance from *traefik-config* folder.  
+    `docker-compose up`
 
-### Support or Contact
+# Congratulation, you can now access the Traefik dashboard on port 8080 of your server/PC!
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+### If you have any questions or suggestions, please open an issue or a pull request.
